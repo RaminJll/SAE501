@@ -1,0 +1,38 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Users {
+  id             Int      @id @default(autoincrement())
+  name           String?
+  email          String   @unique
+  password       String
+  weight         Float? // Poids actuel de l'utilisateur
+  height         Float? // Taille en cm
+  gender         String? // "homme", "femme"
+  goal           String? // "Perdre du poids", "Gagner du poids",
+  caloriesTarget Float? // Objectif calorique journalier (g)
+  proteins       Float? // Objectif journalier en protéines (g)
+
+  ProgressLogs Progress[] // Relation 1-N avec la table Progression
+}
+
+model Progress {
+  id       Int      @id @default(autoincrement())
+  userId   Int
+  date     DateTime @default(now()) // Date d'enregistrement
+  weight   Float // Poids enregistré
+
+  User Users @relation(fields: [userId], references: [id]) // Relation N-1 avec la table Users
+}
