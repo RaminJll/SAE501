@@ -57,21 +57,19 @@ async function getFatSecretData(query) {
     return response.data;
 }
 
-router.get("/allProteines", async (req, res) => {
-    const fields = "categories_tags,product_name,quantity,grade,selected_images,code,stores_tags,nutriscore_data,ingredients_analysis_tags,ingredients_original_tags";
-    
+router.get("/allLegumes", async (req, res) => {
     try {
-        // Liste des recherches FatSecret
+        // Liste des recherches FatSecret (fruits)
         const fatSecretQueries = [
-            'chicken-breast',
-            'chicken',
-            'Ground Meat',
-            'Beef',
-            'Roast Beef',
-            'Beef Shortribs',
-            'Veal',
-            'Lamb Chop',
-            'Pork Chops'
+            'carrot',
+            'potato',
+            'corn',
+            'tomato',
+            'cucumber',
+            'onions',
+            'leeks',
+            'lettuce',
+            'broccoli'
         ];
 
         // Exécution des requêtes FatSecret
@@ -79,33 +77,9 @@ router.get("/allProteines", async (req, res) => {
             fatSecretQueries.map(query => getFatSecretData(query))
         );
 
-        // Configuration des recherches OpenFoodFacts
-        const openFoodQueries = [
-            { categories_tags_fr: 'oeuf', fields },
-            { categories_tags_fr: 'bacon', fields },
-            { categories_tags_fr: 'saucisson', fields },
-            { categories_tags_fr: 'charcuterie', fields },
-            { categories_tags_fr: 'steak', fields }
-        ];
-
-        // Exécution des requêtes OpenFoodFacts
-        const openFoodFactsResponses = await Promise.all(
-            openFoodQueries.map(config =>
-                axios.get('https://world.openfoodfacts.org/api/v2/search', { params: config })
-            )
-        );
-
-        // Traitement des résultats OpenFoodFacts
-        const openFoodFactsResults = openFoodFactsResponses.map(response =>
-            response.data.products.filter(product => 
-                product.selected_images?.front?.small?.fr
-            )
-        );
-
-        // Compilation des résultats
+        // Compilation des résultats et renvoi
         res.json({
-            fatSecret: fatSecretResponses,
-            openFoodFacts: openFoodFactsResults
+            fatSecret: fatSecretResponses
         });
 
     } catch (error) {

@@ -13,6 +13,8 @@ var produitSucree = require('./routes/api/produits-sucree-gras');
 var produitLaitier = require('./routes/api/produits-laitiers');
 var proteines = require('./routes/api/proteines');
 var matieresGrasses = require('./routes/api/matieres-grasses');
+var fruits = require('./routes/api/fruits');
+var legumes = require('./routes/api/legumes');
 
 //routes du backend
 var inscription = require('./routes/inscription');
@@ -41,6 +43,8 @@ app.use('/produits-sucree-gras', produitSucree);
 app.use('/produits-laitiers', produitLaitier);
 app.use('/proteines', proteines);
 app.use('/matieres-grasses', matieresGrasses);
+app.use('/fruits', fruits);
+app.use('/legumes', legumes);
 
 //routes du backend
 app.use('/inscription', inscription);
