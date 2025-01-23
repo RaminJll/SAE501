@@ -57,8 +57,7 @@ async function getFatSecretData(query) {
     return response.data;
 }
 
-router.get("/allProteines", async (req, res) => {
-    const fields = "categories_tags,product_name,quantity,grade,selected_images,code,stores_tags,nutriscore_data,ingredients_analysis_tags,ingredients_original_tags";
+router.get("/allProteinesFatSecret", async (req, res) => {
     
     try {
         // Liste des recherches FatSecret
@@ -79,34 +78,15 @@ router.get("/allProteines", async (req, res) => {
             fatSecretQueries.map(query => getFatSecretData(query))
         );
 
-        // Configuration des recherches OpenFoodFacts
-        const openFoodQueries = [
-            { categories_tags_fr: 'oeuf', fields },
-            { categories_tags_fr: 'bacon', fields },
-            { categories_tags_fr: 'saucisson', fields },
-            { categories_tags_fr: 'charcuterie', fields },
-            { categories_tags_fr: 'steak', fields }
-        ];
 
         // Exécution des requêtes OpenFoodFacts
-        const openFoodFactsResponses = await Promise.all(
-            openFoodQueries.map(config =>
-                axios.get('https://world.openfoodfacts.org/api/v2/search', { params: config })
-            )
-        );
+        /*
 
         // Traitement des résultats OpenFoodFacts
-        const openFoodFactsResults = openFoodFactsResponses.map(response =>
-            response.data.products.filter(product => 
-                product.selected_images?.front?.small?.fr
-            )
-        );
+        */
 
         // Compilation des résultats
-        res.json({
-            fatSecret: fatSecretResponses,
-            openFoodFacts: openFoodFactsResults
-        });
+        res.json(fatSecretResponses);
 
     } catch (error) {
         console.error('Erreur:', error);
@@ -115,6 +95,33 @@ router.get("/allProteines", async (req, res) => {
             error: error.message 
         });
     }
+});
+
+// Fonction pour faire une requête OpenFoodFacts
+router.get('/allProteinesOpenFood', async (req, res) => {
+    const fields = "categories_tags,product_name,quantity,grade,selected_images,code,stores_tags,nutriscore_data,ingredients_analysis_tags,ingredients_original_tags";
+
+    const openFoodFacts = [
+        { categories_tags_fr: 'oeuf', fields },
+        { categories_tags_fr: 'bacon', fields },
+        { categories_tags_fr: 'saucisson', fields },
+        { categories_tags_fr: 'charcuterie', fields },
+        { categories_tags_fr: 'steak', fields }
+    ];
+
+    const openFoodFactsResponses = await Promise.all(
+        openFoodFacts.map(config =>
+            axios.get('https://world.openfoodfacts.org/api/v2/search', { params: config })
+        )
+    );
+
+    const openFoodFactsResults = openFoodFactsResponses.map(response =>
+        response.data.products.filter(product => 
+            product.selected_images?.front?.small?.fr
+        )
+    );
+
+    res.json(openFoodFactsResults);
 });
 
 module.exports = router;

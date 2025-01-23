@@ -78,9 +78,7 @@ router.get("/allFruits", async (req, res) => {
         );
 
         // Compilation des résultats et renvoi
-        res.json({
-            fatSecret: fatSecretResponses
-        });
+        res.json(fatSecretResponses);
 
     } catch (error) {
         console.error('Erreur:', error);

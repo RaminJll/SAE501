@@ -45,6 +45,7 @@ app.use('/proteines', proteines);
 app.use('/matieres-grasses', matieresGrasses);
 app.use('/fruits', fruits);
 app.use('/legumes', legumes);
+app.get('proteines/test');
 
 //routes du backend
 app.use('/inscription', inscription);
