@@ -3,10 +3,8 @@
 	"version": "0.0.0",
 	"private": true,
 	"scripts": {
-		"build": "next build",
-		"vercel-build": "npm install && npm run build",
-		"start": "next start",
-		"dev": "next dev"
+		"start": "node ./bin/www",
+		"build": "npm install && npm run build"
 	},
 	"dependencies": {
 		"@prisma/client": "^6.2.1",
