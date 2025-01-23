@@ -2,6 +2,11 @@
 	"name": "sae501",
 	"version": "0.0.0",
 	"private": true,
+	"scripts": {
+		"start": "node app.js",
+		"build": "npm install",
+		"dev": "nodemon app.js"
+	},
 	"dependencies": {
 		"@prisma/client": "^6.2.1",
 		"axios": "^1.7.9",
@@ -20,11 +25,6 @@
 		"oauth-1.0a": "^2.2.6",
 		"pg": "^8.13.1",
 		"uglify-js": "^3.0.0"
-	},
-	"scripts": {
-		"start": "node app.js",
-		"build": "npm install",
-		"dev": "nodemon app.js"
 	},
 	"devDependencies": {
 		"prisma": "^6.2.1"
