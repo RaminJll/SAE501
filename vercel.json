@@ -3,12 +3,13 @@
 	"builds": [
 		{
 			"src": "package.json",
-			"use": "@vercel/node",
-			"config": {
-				"maxLambdaSize": "50mb",
-				"installCommand": "npm install",
-				"buildCommand": "npm run vercel-build"
-			}
+			"use": "@vercel/node"
+		}
+	],
+	"routes": [
+		{
+			"src": "/(.*)",
+			"dest": "/"
 		}
 	]
 }
