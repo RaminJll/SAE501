@@ -14,25 +14,39 @@ datasource db {
 }
 
 model Users {
-  id             Int      @id @default(autoincrement())
-  name           String?
-  email          String   @unique
+  id             Int     @id @default(autoincrement())
+  name           String
+  email          String  @unique
   password       String
-  weight         Float? // Poids actuel de l'utilisateur
-  height         Float? // Taille en cm
-  gender         String? // "homme", "femme"
-  goal           String? // "Perdre du poids", "Gagner du poids",
-  caloriesTarget Float? // Objectif calorique journalier (g)
-  proteins       Float? // Objectif journalier en protéines (g)
+  age            Int // Age de l'utilisateur
+  weight         Float // Poids actuel de l'utilisateur
+  height         Float // Taille en cm
+  gender         String // "homme", "femme"
+  goal           String // "Perdre du poids", "Gagner du poids",
+  caloriesTarget Float // Objectif calorique journalier (g)
+  proteinsTarget Float // Objectif journalier en protéines (g)
+  carbsTarget    Float // Objectif journalier en glucides (g)
 
   ProgressLogs Progress[] // Relation 1-N avec la table Progression
+  DailyGoals   DailyGoals[]
 }
 
 model Progress {
-  id       Int      @id @default(autoincrement())
-  userId   Int
-  date     DateTime @default(now()) // Date d'enregistrement
-  weight   Float // Poids enregistré
+  id     Int      @id @default(autoincrement())
+  userId Int
+  date   DateTime @default(now()) // Date d'enregistrement
+  weight Float // Poids enregistré
+
+  User Users @relation(fields: [userId], references: [id]) // Relation N-1 avec la table Users
+}
+
+model DailyGoals {
+  id           Int      @id @default(autoincrement())
+  userId       Int
+  date         DateTime @default(now()) // Date de la journée
+  caloriesGoal Boolean // Calories atteints
+  proteinsGoal Boolean // Protéines atteints
+  carbsGoal    Boolean // Glucides atteints
 
   User Users @relation(fields: [userId], references: [id]) // Relation N-1 avec la table Users
 }

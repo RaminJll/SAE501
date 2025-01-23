@@ -10,8 +10,12 @@ const router = express.Router();
 dotenv.config();  // Charger les variables d'environnement depuis le fichier .env
 
 // Fonction pour générer un token d'accès
-function generateAccessToken(username) {
-  return jwt.sign(username, process.env.TOKEN_SECRET, { expiresIn: "1h" });
+function generateAccessToken(user) {
+  return jwt.sign(
+    { userId: user.id, email: user.email },
+    process.env.TOKEN_SECRET,
+    { expiresIn: "1h" }
+  );
 }
 
 // Route POST pour la connexion
@@ -25,18 +29,23 @@ router.post("/", async (req, res, next) => {
     });
 
     if (!user) {
-      return res.status(400).json({ error: "Nom d'utilisateur ou mot de passe incorrect" });
+      return res.status(401).json({ error: "Nom d'utilisateur ou mot de passe incorrect" });
     }
 
-    // Comparaison du mot de passe haché avec celui de l'utilisateur
-    bcrypt.compare(passwordInput, user.password, (err, result) => {
-      if (result) {
-        const token = generateAccessToken({ email: emailInput });
-        res.json({ message: "Vous êtes connecté", token: token });
-      } else {
-        res.status(400).json({ error: "Le mot de passe ou l'identifiant est incorrect" });
-      }
+    const validPassword = await bcrypt.compare(passwordInput, user.password);
+
+    if (!validPassword) {
+      return res.status(401).json({ error: "Nom d'utilisateur ou mot de passe incorrect" });
+    }
+
+    const token = generateAccessToken(user);
+
+    res.json({
+      message: "Connexion réussie",
+      token: token,
+      userId: user.id
     });
+
   } catch (error) {
     next(error);
   }
