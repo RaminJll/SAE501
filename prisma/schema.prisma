@@ -18,7 +18,7 @@ model Users {
   name           String
   email          String  @unique
   password       String
-  age            Int // Age de l'utilisateur
+  age            DateTime // Date de naissance
   weight         Float // Poids actuel de l'utilisateur
   height         Float // Taille en cm
   gender         String // "homme", "femme"
@@ -34,8 +34,8 @@ model Users {
 model Progress {
   id     Int      @id @default(autoincrement())
   userId Int
-  date   DateTime @default(now()) // Date d'enregistrement
   weight Float // Poids enregistré
+  date   DateTime @default(now()) // Date d'enregistrement
 
   User Users @relation(fields: [userId], references: [id]) // Relation N-1 avec la table Users
 }
@@ -43,10 +43,10 @@ model Progress {
 model DailyGoals {
   id           Int      @id @default(autoincrement())
   userId       Int
+  caloriesGoal String? // Calories atteints
+  proteinsGoal String? // Protéines atteints
+  carbsGoal    String? // Glucides atteints
   date         DateTime @default(now()) // Date de la journée
-  caloriesGoal Boolean // Calories atteints
-  proteinsGoal Boolean // Protéines atteints
-  carbsGoal    Boolean // Glucides atteints
 
   User Users @relation(fields: [userId], references: [id]) // Relation N-1 avec la table Users
 }

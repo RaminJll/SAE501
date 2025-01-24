@@ -26,15 +26,25 @@ const passwordRegex = /^.{8,}$/;
 
 
 //fonction pour déterminer les objectifs nutritionnels à atteindre
-function calculateTargets({ weight, height, age, gender, goal }) {
+function calculateTargets({ weight, height, birthDate, gender, goal }) {
+  // Calculer l'âge à partir de la date de naissance
+  const today = new Date();
+  const birth = new Date(birthDate);
+  let age = today.getFullYear() - birth.getFullYear();
+  const monthDiff = today.getMonth() - birth.getMonth();
+  if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
+    age--;
+  }
+
   let bmr; // Basal Metabolic Rate (BMR)
 
   // Calcul de BMR (Harris-Benedict)
-  if (gender === "homme") {
-    bmr = 88.362 + (13.397 * weight) + (4.799 * height) - (5.677 * age);
-  } else {
-    bmr = 447.593 + (9.247 * weight) + (3.098 * height) - (4.330 * age);
-  }
+if (gender === "homme") {
+  bmr = Math.floor(88.362 + (13.397 * weight) + (4.799 * height) - (5.677 * age));
+} else {
+  bmr = Math.floor(447.593 + (9.247 * weight) + (3.098 * height) - (4.330 * age));
+}
+
 
   // Facteur d'activité pour un mode de vie sédentaire (1.2)
   const tdee = bmr * 1.2; // Total Daily Energy Expenditure
@@ -61,7 +71,7 @@ function calculateTargets({ weight, height, age, gender, goal }) {
   }
 
   // Calcul des lipides (environ 30% des calories totales)
-  const fatsTarget = (caloriesTarget * 0.3) / 9; // 1g de lipide = 9 calories
+  const fatsTarget = (caloriesTarget * 0.3) / 9;
 
   return {
     caloriesTarget,
@@ -70,6 +80,7 @@ function calculateTargets({ weight, height, age, gender, goal }) {
     fatsTarget,
   };
 }
+
 
 
 
@@ -92,11 +103,18 @@ router.post("/", async (req, res, next) => {
     // Hachage du mot de passe
     const hashedPassword = await bcrypt.hash(passwordInput, 10);
 
+    //Ajuster le format de la date
+    const birthDateInput = new Date(req.body.ageInput);
+    if (isNaN(birthDateInput.getTime())) {
+      return res.status(400).json({ error: "Date de naissance invalide" });
+    }
+
+
     // Calcul des objectifs (à l'aide de la fonction précédente)
     const { caloriesTarget, proteinsTarget, carbsTarget } = calculateTargets({
       weight: weightInput,
       height: heightInput,
-      age: ageInput,
+      birthDate: ageInput,
       gender: genderInput,
       goal: goalInput,
     });
@@ -109,12 +127,12 @@ router.post("/", async (req, res, next) => {
         name: nameInput,
         weight: weightInput,
         height: heightInput,
-        age: ageInput,
+        age: birthDateInput,
         gender: genderInput,
         goal: goalInput,
-        caloriesTarget,
-        proteinsTarget,
-        carbsTarget,
+        caloriesTarget : caloriesTarget,
+        proteinsTarget : proteinsTarget,
+        carbsTarget : carbsTarget,
       },
     });
 
