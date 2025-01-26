@@ -34,6 +34,9 @@ router.post("/", async (req, res, next) => {
       return res.status(401).json({ error: "Nom d'utilisateur ou mot de passe incorrect" });
     }
 
+    console.log("🔍 Password entered:", passwordInput);
+    console.log("🔍 Hashed password from DB:", user.password);
+
     const validPassword = await bcrypt.compare(passwordInput, user.password);
 
     if (!validPassword) {
