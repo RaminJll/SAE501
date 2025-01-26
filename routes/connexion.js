@@ -21,6 +21,8 @@ function generateAccessToken(user) {
 // Route POST pour la connexion
 router.post("/", async (req, res, next) => {
   try {
+    console.log("🟢 Incoming request:", req.body);
+
     const { emailInput, passwordInput } = req.body;
 
     // Vérifier si l'utilisateur existe dans la base de données
@@ -47,7 +49,9 @@ router.post("/", async (req, res, next) => {
     });
 
   } catch (error) {
-    next(error);
+    console.error("❌ Error in /connexion", error);
+    res.status(500).json({ error: "Problème serveur" });
+    // next(error);
   }
 });
 
