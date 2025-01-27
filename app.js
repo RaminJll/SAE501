@@ -20,6 +20,7 @@ var legumes = require('./routes/api/legumes');
 var inscription = require('./routes/inscription');
 var connexion = require('./routes/connexion');
 var user = require('./routes/users');
+var evolution = require('./routes/evolution');
 
 
 var app = express();
@@ -45,11 +46,13 @@ app.use('/proteines', proteines);
 app.use('/matieres-grasses', matieresGrasses);
 app.use('/fruits', fruits);
 app.use('/legumes', legumes);
+app.get('proteines/test');
 
 //routes du backend
 app.use('/inscription', inscription);
 app.use('/connexion', connexion);
 app.use('/users', user);
+app.use('/evolution', evolution);
 
 
 
